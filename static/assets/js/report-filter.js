@@ -69,7 +69,7 @@ const ChooseFilter = {
                     <label
                         class="mb-0 w-100 d-flex align-items-center justify-content-between">
                         <span class="d-inline-block">{{ filter.title }}</span>
-                        <img v-if="selectedFilter && filter.id === selectedFilter.id" src="./assets/ico/check.svg" class="ml-3">
+                        <img v-if="selectedFilter && filter.id === selectedFilter.id" src="/design-system/static/assets/ico/check.svg" class="ml-3">
                     </label>
                     <div class="pl-2">
                         <button

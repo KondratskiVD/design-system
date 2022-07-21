@@ -32,7 +32,7 @@ const ChoosePreset = {
                         <label
                             class="mb-0 w-100 d-flex align-items-center justify-content-between">
                             <span class="d-inline-block">{{ item.title }}</span>
-                            <img v-if="item.id === selectedPreset.id" src="./assets/ico/check.svg" class="ml-3">
+                            <img v-if="item.id === selectedPreset.id" src="/design-system/static/assets/ico/check.svg" class="ml-3">
                         </label>
                         <div class="pl-2">
                             <button

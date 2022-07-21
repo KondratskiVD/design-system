@@ -215,7 +215,7 @@ const ComplexList = {
                             type="text"
                             placeholder="Search"
                             v-model="inputSearch">
-                        <img src="assets/ico/search.svg" class="icon-search position-absolute">
+                        <img src="/design-system/static/assets/ico/search.svg" class="icon-search position-absolute">
                     </div>
                 </div>
                 <ul class="my-0">
@@ -328,7 +328,7 @@ const ComplexListFilter = {
                             type="text"
                             placeholder="Search"
                             v-model="inputSearch">
-                        <img src="assets/ico/search.svg" class="icon-search position-absolute">
+                        <img src="/design-system/static/assets/ico/search.svg" class="icon-search position-absolute">
                     </div>
                 </div>
                 <ul class="my-0">
@@ -423,7 +423,7 @@ const MultiselectFilter = {
                             type="text"
                             placeholder="Search"
                             v-model="inputSearch">
-                        <img src="assets/ico/search.svg" class="icon-search position-absolute">
+                        <img src="/design-system/static/assets/ico/search.svg" class="icon-search position-absolute">
                     </div>
                 </div>
                 <ul class="my-0">
@@ -506,7 +506,7 @@ const VDropdown = {
                                 @click="selectDefault"
                                 class="mb-0 w-100 d-flex align-items-center">
                                 <span class="w-100 d-inline-block">Default preset</span>
-                                <img v-if="!selectedItem.id" src="./assets/ico/check.svg">
+                                <img v-if="!selectedItem.id" src="/design-system/static/assets/ico/check.svg">
                             </label>
                         </li>
                         <li
@@ -516,7 +516,7 @@ const VDropdown = {
                                 @click="selectedItem = item"
                                 class="mb-0 w-100 d-flex align-items-center">
                                 <span class="w-100 d-inline-block">{{ item.title }}</span>
-                                <img v-if="item.id === selectedItem.id" src="./assets/ico/check.svg" class="mr-2">
+                                <img v-if="item.id === selectedItem.id" src="/design-system/static/assets/ico/check.svg" class="mr-2">
                             </label>
                             <button 
                                 v-if="loadingDelete && deletedId === item.id"
@@ -621,7 +621,7 @@ const RemovableFilter = {
                             type="text"
                             placeholder="Search"
                             v-model="inputSearch">
-                        <img src="assets/ico/search.svg" class="icon-search position-absolute">
+                        <img src="/design-system/static/assets/ico/search.svg" class="icon-search position-absolute">
                     </div>
                 </div>
                 <ul class="my-0">
@@ -658,18 +658,121 @@ const RemovableFilter = {
         </div>`
 };
 
-const dropdownsApp = Vue.createApp({
-    components: {
-        'simple-list': SimpleList,
-        'complex-list': ComplexList,
-        'complex-list-filter': ComplexListFilter,
-        'removable-filter': RemovableFilter,
-        'v-dropdown': VDropdown,
-        'multiselect-filter': MultiselectFilter,
-    }
-});
+const ComplexListUniversal = {
+    props: {
+        itemsList: {
+            type: Array,
+            default: [],
+        },
+        showAllCbx: {
+            type: Boolean,
+            default: false
+        },
+        showSearch: {
+            type: Boolean,
+            default: false
+        },
+        instance_name: {
+            type: String
+        }
+    },
+    data() {
+        return {
+            inputSearch: '',
+            refSearchId: 'refSearchCbx'+Math.round(Math.random() * 1000),
+            selectedItems: [],
+            closeOnItem: true,
+        }
+    },
+    computed: {
+        foundItems() {
+            return this.inputSearch ?
+                this.itemsList.filter(item => {
+                    return item.toUpperCase().includes(this.inputSearch.toUpperCase())
+                }) :
+                this.itemsList
+        },
+        isAllSelected() {
+            return (this.selectedItems.length < this.itemsList.length) && this.selectedItems.length > 0
+        }
+    },
+    watch: {
+        selectedItems: function (val) {
+            if(this.showAllCbx) {
+                this.$refs[this.refSearchId].checked = this.selectedItems.length === this.itemsList.length ? true : false;
+            }
+            this.$emit('select-items');
+        }
+    },
+    methods: {
+        handlerSelectAll() {
+            if (this.selectedItems.length !== this.itemsList.length) {
+                this.selectedItems = [...this.itemsList];
+            } else {
+                this.selectedItems.splice(0);
+            }
+        }
+    },
+    template: `
+        <div id="complexList" class="complex-list">
+            <button class="btn btn-select dropdown-toggle" type="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span v-if="selectedItems.length > 0" class="complex-list_filled">{{ selectedItems.length }} selected</span>
+                <span v-else class="complex-list_empty">Select Step</span>
+            </button>
+            <div class="dropdown-menu"
+                :class="{'close-outside': closeOnItem}">
+                <div v-if="itemsList.length > 4 && showSearch" class="px-3 pb-2 search-group">
+                    <div class="custom-input custom-input_search__sm position-relative">
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            v-model="inputSearch">
+                        <img src="/design-system/static/assets/ico/search.svg" class="icon-search position-absolute">
+                    </div>
+                </div>
+                <ul class="my-0">
+                    <li
+                       v-if="showAllCbx"
+                       class="dropdown-item dropdown-menu_item d-flex align-items-center">
+                       <label
+                            class="mb-0 w-100 d-flex align-items-center custom-checkbox"
+                            :class="{ 'custom-checkbox__minus': isAllSelected }">
+                            <input
+                                :ref="refSearchId"
+                                @click="handlerSelectAll"
+                                type="checkbox">
+                            <span class="w-100 d-inline-block ml-3">All</span>
+                       </label>
+                    </li>
+                    <li
+                        class="dropdown-item dropdown-menu_item d-flex align-items-center"
+                        v-for="item in foundItems" :key="item">
+                         <label
+                            class="mb-0 w-100 d-flex align-items-center custom-checkbox">
+                            <input
+                                :value="item"
+                                v-model="selectedItems"
+                                type="checkbox">
+                            <span class="w-100 d-inline-block ml-3">{{ item }}</span>
+                        </label>
+                    </li>
+                </ul>
+                <div class="p-3">
+                    <button class="btn btn-basic mr-2" type="submit">Primary</button>
+                    <button type="button" class="btn btn-secondary">Secondary</button>
+                </div>
+            </div>
+        </div>`
+};
 
-dropdownsApp.mount('#dropdowns');
+register_component('simple-list', SimpleList);
+register_component('complex-list', ComplexList);
+register_component('complex-list-filter', ComplexListFilter);
+register_component('complex-list-universal', ComplexListUniversal);
+register_component('removable-filter', RemovableFilter);
+register_component('v-dropdown', VDropdown);
+register_component('multiselect-filter', MultiselectFilter);
 
 let data = [{
     "id": "1",
@@ -699,15 +802,18 @@ let data = [{
         "text": "node-2",
     }
 ]
-let tree = new Tree('.tree', {
-    data,
-    loaded: function () {
-        this.values = ['1', '2'];
-        // console.log(this.selectedNodes)
-        // console.log(this.values)
-    },
-})
 
-$(".dropdown-menu.close-outside").on("click", function (event) {
-    event.stopPropagation();
-});
+
+$(document).ready(function() {
+    $(".dropdown-menu.close-outside").on("click", function (event) {
+        event.stopPropagation();
+    });
+    let tree = new Tree('.tree', {
+        data,
+        loaded: function () {
+            this.values = ['1', '2'];
+            // console.log(this.selectedNodes)
+            // console.log(this.values)
+        },
+    })
+})

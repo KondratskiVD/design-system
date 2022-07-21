@@ -1,0 +1,7 @@
+.d-grid {
+  display: grid;
+}
+
+.grid-column-7 {
+  grid-template-columns: repeat(7, 1fr);
+}

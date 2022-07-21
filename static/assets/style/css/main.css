@@ -1732,7 +1732,7 @@ td.disabled input {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("../../../assets/ico/loading.svg");
+  background-image: url("/design-system/static/assets/ico/loading.svg");
 }
 
 .preview-loader__white {
@@ -3753,7 +3753,7 @@ option {
   content: "";
   width: 16px;
   height: 16px;
-  background: url("../../../assets/ico/loading.svg") no-repeat;
+  background: url("/design-system/static/assets/ico/loading.svg") no-repeat;
 }
 .preview-area_close::after {
   content: "";
@@ -4260,16 +4260,6 @@ a:active {
   padding: 20px;
 }
 
-.tab-content {
-  width: 600px;
-  height: auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
 .tab-content svg {
   fill: var(--primary);
 }
@@ -4765,6 +4755,14 @@ div-content .row {
 ::-webkit-scrollbar-thumb {
   background: #eef3f6;
   border-radius: 4px;
+}
+
+.d-grid {
+  display: grid;
+}
+
+.grid-column-7 {
+  grid-template-columns: repeat(7, 1fr);
 }
 
 /*# sourceMappingURL=main.css.map */
